@@ -93,11 +93,11 @@ public class NukeControl {
         for (int i = 1; i < 25; i++) {
             final int k = i;
             Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> nukeEffects(target, 115 + (k * 6),
-                    30 * k, (float) k / 2, block, player), i);
+                    30 * k, block, player), i);
         }
     }
 
-    private static void nukeEffects(Location target, int range, int particles, double offSetY, boolean block,
+    private static void nukeEffects(Location target, int particles, double offSetY, boolean block,
                                     boolean player) {
 
         if (player)
@@ -108,14 +108,14 @@ public class NukeControl {
             target.getWorld().playSound(target, Sound.ENTITY_GENERIC_EXPLODE, 1F, 1F);
         }
         target.getWorld().playSound(target, Sound.AMBIENT_CAVE, 1F, 1F);
-        target.getWorld().spigot().playEffect(target, Effect.CLOUD, 1, 1, 0F, 3F +
-                (float) offSetY, 3F, 1F, particles, range);
-        target.getWorld().spigot().playEffect(target, Effect.LAVA_POP, 1, 1, 0F, 3F +
-                (float) offSetY, 0F, 1F, particles, range);
-        target.getWorld().spigot().playEffect(target, Effect.SMOKE, 1, 1, 0F, 3F +
-                (float) offSetY, 0F, 1F, particles, range);
-        target.getWorld().spigot().playEffect(target, Effect.FLAME, 1, 1, 0F, 3F +
-                (float) offSetY, 0F + (float) offSetY, 1F, particles, range);
+        target.getWorld().spawnParticle(Particle.CLOUD, target, particles, 1, 0F, 3F +
+                (float) offSetY, 3F, 1F);
+        target.getWorld().spawnParticle(Particle.LAVA, target, particles, 1, 0F, 3F +
+                (float) offSetY, 0F, 1F);
+        target.getWorld().spawnParticle(Particle.SMOKE_LARGE, target, particles, 1, 0F, 3F +
+                (float) offSetY, 0F, 1F);
+        target.getWorld().spawnParticle(Particle.FLAME, target, particles, 1, 0F, 3F +
+                (float) offSetY, 0F + (float) offSetY, 1F);
     }
 
     public enum Stage {

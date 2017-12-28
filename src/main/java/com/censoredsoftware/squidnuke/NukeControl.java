@@ -10,187 +10,165 @@ import org.bukkit.util.Vector;
 
 import java.util.Set;
 
-public class NukeControl
-{
-	private static Set<String> targets = Sets.newHashSet();
+public class NukeControl {
+    private static Set<String> targets = Sets.newHashSet();
 
-	private Plugin plugin;
-	private LivingEntity squid;
-	private OfflinePlayer target;
-	private Stage stage;
-	private Location startPoint, checkpoint, targetLocation;
+    private Plugin plugin;
+    private LivingEntity squid;
+    private OfflinePlayer target;
+    private Stage stage;
+    private Location startPoint, checkpoint, targetLocation;
 
-	public NukeControl(Plugin plugin, LivingEntity squid, Location launchPoint, OfflinePlayer target, Location targetLocation)
-	{
-		this.plugin = plugin;
-		this.squid = squid;
-		this.target = target;
-		stage = Stage.LAUNCH;
-		startPoint = launchPoint;
-		this.targetLocation = targetLocation;
-		targets.add(target.getName());
-		calculateNextCheckpoint();
-	}
+    public NukeControl(Plugin plugin, LivingEntity squid, Location launchPoint, OfflinePlayer target, Location targetLocation) {
+        this.plugin = plugin;
+        this.squid = squid;
+        this.target = target;
+        stage = Stage.LAUNCH;
+        startPoint = launchPoint;
+        this.targetLocation = targetLocation;
+        targets.add(target.getName());
+        calculateNextCheckpoint();
+    }
 
-	public LivingEntity getNuke()
-	{
-		return this.squid;
-	}
+    public LivingEntity getNuke() {
+        return this.squid;
+    }
 
-	public Location getStartPoint()
-	{
-		return startPoint;
-	}
+    public Location getStartPoint() {
+        return startPoint;
+    }
 
-	public Location getCheckPoint()
-	{
-		return checkpoint;
-	}
+    public Location getCheckPoint() {
+        return checkpoint;
+    }
 
-	public OfflinePlayer getTarget()
-	{
-		return target;
-	}
+    public OfflinePlayer getTarget() {
+        return target;
+    }
 
-	public Stage getStage()
-	{
-		return this.stage;
-	}
+    public Stage getStage() {
+        return this.stage;
+    }
 
-	public void startTravel()
-	{
-		Bukkit.getScheduler().runTask(plugin, new TravelStage(this));
-	}
+    public void startTravel() {
+        Bukkit.getScheduler().runTask(plugin, new TravelStage(this));
+    }
 
-	private void calculateNextCheckpoint()
-	{
-		this.stage = stage.getNext();
-		if(target.isOnline()) targetLocation = getTarget(target.getPlayer());
-		switch(stage)
-		{
-			case ASCENT:
-			{
-				this.checkpoint = new Location(startPoint.getWorld(), startPoint.getX() > targetLocation.getX() ? startPoint.getX() - 10 : startPoint.getX() + 10, startPoint.getY() + 50 > 248 ? 248 : startPoint.getY() + 50, startPoint.getZ() > targetLocation.getZ() ? startPoint.getZ() - 10 : startPoint.getZ() + 10);
-				break;
-			}
-			case TRAVEL:
-			{
-				this.checkpoint = new Location(targetLocation.getWorld(), checkpoint.getX() > targetLocation.getX() ? targetLocation.getX() + 10 : targetLocation.getX() - 10, checkpoint.getY() + 50 > 248 ? 248 : checkpoint.getY() + 50, checkpoint.getZ() > targetLocation.getZ() ? targetLocation.getZ() + 10 : targetLocation.getZ() - 10);
-				break;
-			}
-			case DECENT:
-			{
-				this.checkpoint = new Location(targetLocation.getWorld(), targetLocation.getX(), targetLocation.getY(), targetLocation.getZ());
-				break;
-			}
-		}
-	}
+    private void calculateNextCheckpoint() {
+        this.stage = stage.getNext();
+        if (target.isOnline()) targetLocation = getTarget(target.getPlayer());
+        switch (stage) {
+            case ASCENT: {
+                this.checkpoint = new Location(startPoint.getWorld(), startPoint.getX() > targetLocation.getX() ?
+                        startPoint.getX() - 10 : startPoint.getX() + 10, startPoint.getY() + 50 > 248 ? 248 :
+                        startPoint.getY() + 50, startPoint.getZ() > targetLocation.getZ() ? startPoint.getZ() - 10 :
+                        startPoint.getZ() + 10);
+                break;
+            }
+            case TRAVEL: {
+                this.checkpoint = new Location(targetLocation.getWorld(), checkpoint.getX() > targetLocation.getX() ?
+                        targetLocation.getX() + 10 : targetLocation.getX() - 10, checkpoint.getY() + 50 > 248 ? 248 :
+                        checkpoint.getY() + 50, checkpoint.getZ() > targetLocation.getZ() ? targetLocation.getZ() + 10 :
+                        targetLocation.getZ() - 10);
+                break;
+            }
+            case DECENT: {
+                this.checkpoint = new Location(targetLocation.getWorld(), targetLocation.getX(), targetLocation.getY(),
+                        targetLocation.getZ());
+                break;
+            }
+        }
+    }
 
-	public static Location getTarget(Player target)
-	{
-		return new Location(target.getWorld(), target.getLocation().getX(), 0.0 + target.getWorld().getHighestBlockYAt(target.getLocation()), target.getLocation().getZ());
-	}
+    public static Location getTarget(Player target) {
+        return new Location(target.getWorld(), target.getLocation().getX(), 0.0 + target.getWorld().
+                getHighestBlockYAt(target.getLocation()), target.getLocation().getZ());
+    }
 
-	public static boolean isATarget(OfflinePlayer player)
-	{
-		return targets.contains(player.getName());
-	}
+    public static boolean isATarget(OfflinePlayer player) {
+        return targets.contains(player.getName());
+    }
 
-	public static void nuke(Plugin plugin, final Location target, final boolean block, final boolean player)
-	{
-		for(int i = 1; i < 25; i++)
-		{
-			final int k = i;
-			Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					nukeEffects(target, 115 + (k * 6), 30 * k, (float) k / 2, block, player);
-				}
-			}, i);
-		}
-	}
+    public static void nuke(Plugin plugin, final Location target, final boolean block, final boolean player) {
+        for (int i = 1; i < 25; i++) {
+            final int k = i;
+            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> nukeEffects(target, 115 + (k * 6),
+                    30 * k, (float) k / 2, block, player), i);
+        }
+    }
 
-	private static void nukeEffects(Location target, int range, int particles, double offSetY, boolean block, boolean player)
-	{
+    private static void nukeEffects(Location target, int range, int particles, double offSetY, boolean block,
+                                    boolean player) {
 
-		if(player) target.getWorld().createExplosion(target.getX(), target.getY() + 3.0 + offSetY, target.getZ(), 6F, block, block);
-		else
-		{
-			target.getWorld().spigot().playEffect(target, Effect.EXPLOSION_HUGE);
-			target.getWorld().playSound(target, Sound.EXPLODE, 1F, 1F);
-		}
-		target.getWorld().playSound(target, Sound.AMBIENCE_CAVE, 1F, 1F);
-		target.getWorld().spigot().playEffect(target, Effect.CLOUD, 1, 1, 0F, 3F + (float) offSetY, 3F, 1F, particles, range);
-		target.getWorld().spigot().playEffect(target, Effect.LAVA_POP, 1, 1, 0F, 3F + (float) offSetY, 0F, 1F, particles, range);
-		target.getWorld().spigot().playEffect(target, Effect.SMOKE, 1, 1, 0F, 3F + (float) offSetY, 0F, 1F, particles, range);
-		target.getWorld().spigot().playEffect(target, Effect.FLAME, 1, 1, 0F, 3F + (float) offSetY, 0F + (float) offSetY, 1F, particles, range);
-	}
+        if (player)
+            target.getWorld().createExplosion(target.getX(), target.getY() + 3.0 + offSetY, target.getZ(),
+                    6F, block, block);
+        else {
+             target.getWorld().spawnParticle(Particle.EXPLOSION_HUGE, target, 1);
+            target.getWorld().playSound(target, Sound.ENTITY_GENERIC_EXPLODE, 1F, 1F);
+        }
+        target.getWorld().playSound(target, Sound.AMBIENT_CAVE, 1F, 1F);
+        target.getWorld().spigot().playEffect(target, Effect.CLOUD, 1, 1, 0F, 3F +
+                (float) offSetY, 3F, 1F, particles, range);
+        target.getWorld().spigot().playEffect(target, Effect.LAVA_POP, 1, 1, 0F, 3F +
+                (float) offSetY, 0F, 1F, particles, range);
+        target.getWorld().spigot().playEffect(target, Effect.SMOKE, 1, 1, 0F, 3F +
+                (float) offSetY, 0F, 1F, particles, range);
+        target.getWorld().spigot().playEffect(target, Effect.FLAME, 1, 1, 0F, 3F +
+                (float) offSetY, 0F + (float) offSetY, 1F, particles, range);
+    }
 
-	public enum Stage
-	{
-		LAUNCH, ASCENT, TRAVEL, DECENT;
+    public enum Stage {
+        LAUNCH, ASCENT, TRAVEL, DECENT;
 
-		public Stage getNext()
-		{
-			return get(ordinal() + 1);
-		}
+        public Stage getNext() {
+            return get(ordinal() + 1);
+        }
 
-		private static Stage get(int order)
-		{
-			try {
-				return values()[order];
-			}
-			catch(Exception ignored)
-			{}
-			return null;
-		}
-	}
+        private static Stage get(int order) {
+            try {
+                return values()[order];
+            } catch (Exception ignored) {
+            }
+            return null;
+        }
+    }
 
-	public static class TravelStage extends BukkitRunnable
-	{
-		private NukeControl control;
+    public static class TravelStage extends BukkitRunnable {
+        private NukeControl control;
 
-		public TravelStage(NukeControl control)
-		{
-			this.control = control;
-		}
+        public TravelStage(NukeControl control) {
+            this.control = control;
+        }
 
-		@Override
-		public void run()
-		{
-			if(control.getNuke() == null || control.getNuke().isDead()) return;
-			if(control.getNuke().getLocation().distance(control.getCheckPoint()) < 4)
-			{
-				if(!control.getStage().equals(Stage.DECENT)) startNextTravelStage();
-				else
-				{
-					SquidNuke.squids.remove(control.getNuke().getUniqueId());
-					NukeControl.nuke(control.plugin, control.getNuke().getLocation(), SquidNuke.blockDamage, SquidNuke.playerDamage);
-					control.getNuke().remove();
-					targets.remove(control.getTarget().getName());
-				}
-			}
-			else
-			{
-				go();
-				if(!control.getStage().equals(Stage.DECENT)) control.getNuke().setNoDamageTicks(2);
-				Bukkit.getScheduler().scheduleSyncDelayedTask(control.plugin, new TravelStage(control), 1);
-			}
-		}
+        @Override
+        public void run() {
+            if (control.getNuke() == null || control.getNuke().isDead()) return;
+            if (control.getNuke().getLocation().distance(control.getCheckPoint()) < 4) {
+                if (!control.getStage().equals(Stage.DECENT)) startNextTravelStage();
+                else {
+                    SquidNuke.squids.remove(control.getNuke().getUniqueId());
+                    NukeControl.nuke(control.plugin, control.getNuke().getLocation(), SquidNuke.blockDamage,
+                            SquidNuke.playerDamage);
+                    control.getNuke().remove();
+                    targets.remove(control.getTarget().getName());
+                }
+            } else {
+                go();
+                if (!control.getStage().equals(Stage.DECENT)) control.getNuke().setNoDamageTicks(2);
+                Bukkit.getScheduler().scheduleSyncDelayedTask(control.plugin, new TravelStage(control), 1);
+            }
+        }
 
-		public void go()
-		{
-			if(control.getNuke().getLocation().getBlockY() > 256) control.getNuke().teleport(control.getCheckPoint());
-			Vector direction = control.getCheckPoint().toVector().subtract(control.getNuke().getLocation().toVector());
-			control.getNuke().setVelocity(direction);
-		}
+        public void go() {
+            if (control.getNuke().getLocation().getBlockY() > 256) control.getNuke().teleport(control.getCheckPoint());
+            Vector direction = control.getCheckPoint().toVector().subtract(control.getNuke().getLocation().toVector());
+            control.getNuke().setVelocity(direction);
+        }
 
-		public void startNextTravelStage()
-		{
-			control.calculateNextCheckpoint();
-			Bukkit.getScheduler().scheduleSyncDelayedTask(control.plugin, new TravelStage(control), 1);
-		}
-	}
+        public void startNextTravelStage() {
+            control.calculateNextCheckpoint();
+            Bukkit.getScheduler().scheduleSyncDelayedTask(control.plugin, new TravelStage(control), 1);
+        }
+    }
 }

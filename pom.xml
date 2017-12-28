@@ -6,7 +6,7 @@
 
     <groupId>com.censoredsoftware</groupId>
     <artifactId>SquidNuke</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
 
     <name>SquidNuke</name>
     <description>SquidNuke for Bukkit/Spigot Minecraft Servers.</description>
@@ -27,29 +27,13 @@
 
     <properties> <!-- It is important to keep up to date manually. -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spigot.version>1.7.9-R0.2-SNAPSHOT</spigot.version>
+        <spigot.version>1.12.2-R0.1-SNAPSHOT</spigot.version>
     </properties>
-
-    <developers>
-        <developer>
-            <id>HmmmQuestionMark</id>
-            <name>Alexander Chauncey</name>
-            <organization>CensoredSoftware</organization>
-            <organizationUrl>http://www.censoredsoftware.com/</organizationUrl>
-            <roles>
-                <role>developer</role>
-            </roles>
-            <properties>
-                <skype>HmmmQuestionMark</skype>
-            </properties>
-            <timezone>-4</timezone>
-        </developer>
-    </developers>
 
     <repositories>
         <repository>
-            <id>md_5-releases</id>
-            <url>http://repo.md-5.net/content/repositories/snapshots</url>
+            <id>spigot</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
     </repositories>
 
@@ -84,8 +68,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
         </plugins>

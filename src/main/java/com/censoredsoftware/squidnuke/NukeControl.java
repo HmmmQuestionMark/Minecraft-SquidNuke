@@ -19,7 +19,8 @@ public class NukeControl {
     private Stage stage;
     private Location startPoint, checkpoint, targetLocation;
 
-    public NukeControl(Plugin plugin, LivingEntity squid, Location launchPoint, OfflinePlayer target, Location targetLocation) {
+    public NukeControl(Plugin plugin, LivingEntity squid, Location launchPoint, OfflinePlayer target,
+                       Location targetLocation) {
         this.plugin = plugin;
         this.squid = squid;
         this.target = target;
@@ -93,29 +94,38 @@ public class NukeControl {
         for (int i = 1; i < 25; i++) {
             final int k = i;
             Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> nukeEffects(target, 115 + (k * 6),
-                    30 * k, block, player), i);
+                    30 * k, (float) k / 2, block, player), i);
         }
     }
 
-    private static void nukeEffects(Location target, int particles, double offSetY, boolean block,
+    private static void nukeEffects(Location target, int range, int particles, double offSetY, boolean block,
                                     boolean player) {
 
         if (player)
             target.getWorld().createExplosion(target.getX(), target.getY() + 3.0 + offSetY, target.getZ(),
                     6F, block, block);
         else {
-             target.getWorld().spawnParticle(Particle.EXPLOSION_HUGE, target, 1);
+            target.getWorld().spawnParticle(Particle.EXPLOSION_HUGE, target, 1);
             target.getWorld().playSound(target, Sound.ENTITY_GENERIC_EXPLODE, 1F, 1F);
         }
         target.getWorld().playSound(target, Sound.AMBIENT_CAVE, 1F, 1F);
-        target.getWorld().spawnParticle(Particle.CLOUD, target, particles, 0F, 3F +
+        target.getWorld().spigot().playEffect(target, Effect.CLOUD, 1, 1, 0F, 3F +
+                (float) offSetY, 3F, 1F, particles, 5);
+        target.getWorld().spigot().playEffect(target, Effect.LAVA_POP, 1, 1, 0F, 3F +
+                (float) offSetY, 0F, 1F, particles, 5);
+        target.getWorld().spigot().playEffect(target, Effect.SMOKE, 1, 1, 0F, 3F +
+                (float) offSetY, 0F, 1F, particles, 5);
+        target.getWorld().spigot().playEffect(target, Effect.FLAME, 1, 1, 0F, 3F +
+                (float) offSetY, 0F + (float) offSetY, 1F, particles, 5);
+
+        /*target.getWorld().spawnParticle(Particle.CLOUD, target, particles, 0F, 3F +
                 (float) offSetY, 3F);
         target.getWorld().spawnParticle(Particle.LAVA, target, particles, 0F, 3F +
                 (float) offSetY, 0F);
         target.getWorld().spawnParticle(Particle.SMOKE_LARGE, target, particles, 0F, 3F +
                 (float) offSetY, 0F);
         target.getWorld().spawnParticle(Particle.FLAME, target, particles, 0F, 3F +
-                (float) offSetY, 0F + (float) offSetY);
+                (float) offSetY, 0F + (float) offSetY);*/
     }
 
     public enum Stage {

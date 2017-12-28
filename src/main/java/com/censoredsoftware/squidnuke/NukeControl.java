@@ -108,14 +108,14 @@ public class NukeControl {
             target.getWorld().playSound(target, Sound.ENTITY_GENERIC_EXPLODE, 1F, 1F);
         }
         target.getWorld().playSound(target, Sound.AMBIENT_CAVE, 1F, 1F);
-        target.getWorld().spawnParticle(Particle.CLOUD, target, particles, 1, 0F, 3F +
-                (float) offSetY, 3F, 1F);
-        target.getWorld().spawnParticle(Particle.LAVA, target, particles, 1, 0F, 3F +
-                (float) offSetY, 0F, 1F);
-        target.getWorld().spawnParticle(Particle.SMOKE_LARGE, target, particles, 1, 0F, 3F +
-                (float) offSetY, 0F, 1F);
-        target.getWorld().spawnParticle(Particle.FLAME, target, particles, 1, 0F, 3F +
-                (float) offSetY, 0F + (float) offSetY, 1F);
+        target.getWorld().spawnParticle(Particle.CLOUD, target, particles, 0F, 3F +
+                (float) offSetY, 3F);
+        target.getWorld().spawnParticle(Particle.LAVA, target, particles, 0F, 3F +
+                (float) offSetY, 0F);
+        target.getWorld().spawnParticle(Particle.SMOKE_LARGE, target, particles, 0F, 3F +
+                (float) offSetY, 0F);
+        target.getWorld().spawnParticle(Particle.FLAME, target, particles, 0F, 3F +
+                (float) offSetY, 0F + (float) offSetY);
     }
 
     public enum Stage {

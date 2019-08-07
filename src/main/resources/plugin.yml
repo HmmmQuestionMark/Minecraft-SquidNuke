@@ -1,6 +1,6 @@
 name: SquidNuke
 main: me.hqm.SquidNuke
-api-version: 1.13
+api-version: 1.14
 version: ${project.version}
 authors: [HQM]
 commands:

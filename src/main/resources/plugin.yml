@@ -1,7 +1,8 @@
 name: SquidNuke
-main: com.censoredsoftware.squidnuke.SquidNuke
+main: me.hqm.SquidNuke
+api-version: 1.13
 version: ${project.version}
-authors: [HmmmQuestionMark]
+authors: [HQM]
 commands:
     squidnuke:
         usage: /squidnuke <player> [type]

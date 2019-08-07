@@ -1,4 +1,4 @@
-package com.censoredsoftware.squidnuke;
+package me.hqm.squidnuke;
 
 import com.google.common.collect.Sets;
 import org.bukkit.*;
@@ -10,7 +10,7 @@ import org.bukkit.util.Vector;
 
 import java.util.Set;
 
-public class NukeControl {
+class NukeControl {
     private static Set<String> targets = Sets.newHashSet();
 
     private Plugin plugin;
@@ -19,7 +19,7 @@ public class NukeControl {
     private Stage stage;
     private Location startPoint, checkpoint, targetLocation;
 
-    public NukeControl(Plugin plugin, LivingEntity squid, Location launchPoint, OfflinePlayer target,
+    NukeControl(Plugin plugin, LivingEntity squid, Location launchPoint, OfflinePlayer target,
                        Location targetLocation) {
         this.plugin = plugin;
         this.squid = squid;
@@ -31,27 +31,27 @@ public class NukeControl {
         calculateNextCheckpoint();
     }
 
-    public LivingEntity getNuke() {
+    LivingEntity getNuke() {
         return this.squid;
     }
 
-    public Location getStartPoint() {
+    Location getStartPoint() {
         return startPoint;
     }
 
-    public Location getCheckPoint() {
+    Location getCheckPoint() {
         return checkpoint;
     }
 
-    public OfflinePlayer getTarget() {
+    OfflinePlayer getTarget() {
         return target;
     }
 
-    public Stage getStage() {
+    Stage getStage() {
         return this.stage;
     }
 
-    public void startTravel() {
+    void startTravel() {
         Bukkit.getScheduler().runTask(plugin, new TravelStage(this));
     }
 
@@ -81,25 +81,23 @@ public class NukeControl {
         }
     }
 
-    public static Location getTarget(Player target) {
+    static Location getTarget(Player target) {
         return new Location(target.getWorld(), target.getLocation().getX(), 0.0 + target.getWorld().
                 getHighestBlockYAt(target.getLocation()), target.getLocation().getZ());
     }
 
-    public static boolean isATarget(OfflinePlayer player) {
+    static boolean isATarget(OfflinePlayer player) {
         return targets.contains(player.getName());
     }
 
-    public static void nuke(Plugin plugin, final Location target, final boolean block, final boolean player) {
+    static void nuke(Plugin plugin, final Location target, final boolean block, final boolean player) {
         for (int i = 1; i < 25; i++) {
             final int k = i;
-            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> nukeEffects(target, 115 + (k * 6),
-                    30 * k, (float) k / 2, block, player), i);
+            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> nukeEffects(target, 30 * k, (double) k / 2, block, player), i);
         }
     }
 
-    private static void nukeEffects(Location target, int range, int particles, double offSetY, boolean block,
-                                    boolean player) {
+    private static void nukeEffects(Location target, int particles, double offSetY, boolean block, boolean player) {
 
         if (player)
             target.getWorld().createExplosion(target.getX(), target.getY() + 3.0 + offSetY, target.getZ(),
@@ -109,23 +107,10 @@ public class NukeControl {
             target.getWorld().playSound(target, Sound.ENTITY_GENERIC_EXPLODE, 1F, 1F);
         }
         target.getWorld().playSound(target, Sound.AMBIENT_CAVE, 1F, 1F);
-        target.getWorld().spigot().playEffect(target, Effect.CLOUD, 1, 1, 0F, 3F +
-                (float) offSetY, 3F, 1F, particles, 5);
-        target.getWorld().spigot().playEffect(target, Effect.LAVA_POP, 1, 1, 0F, 3F +
-                (float) offSetY, 0F, 1F, particles, 5);
-        target.getWorld().spigot().playEffect(target, Effect.SMOKE, 1, 1, 0F, 3F +
-                (float) offSetY, 0F, 1F, particles, 5);
-        target.getWorld().spigot().playEffect(target, Effect.FLAME, 1, 1, 0F, 3F +
-                (float) offSetY, 0F + (float) offSetY, 1F, particles, 5);
-
-        /*target.getWorld().spawnParticle(Particle.CLOUD, target, particles, 0F, 3F +
-                (float) offSetY, 3F);
-        target.getWorld().spawnParticle(Particle.LAVA, target, particles, 0F, 3F +
-                (float) offSetY, 0F);
-        target.getWorld().spawnParticle(Particle.SMOKE_LARGE, target, particles, 0F, 3F +
-                (float) offSetY, 0F);
-        target.getWorld().spawnParticle(Particle.FLAME, target, particles, 0F, 3F +
-                (float) offSetY, 0F + (float) offSetY);*/
+        target.getWorld().spawnParticle(Particle.CLOUD, target, particles, 0, 3D + offSetY, 3D, 5D);
+        target.getWorld().spawnParticle(Particle.LAVA, target, particles, 0, 3D + offSetY, 0, 5D);
+        target.getWorld().spawnParticle(Particle.SMOKE_LARGE, target, particles, 0, 3D + offSetY, 0, 5D);
+        target.getWorld().spawnParticle(Particle.FLAME, target, particles, 0, 3D + offSetY, offSetY, 5D);
     }
 
     public enum Stage {
@@ -144,10 +129,10 @@ public class NukeControl {
         }
     }
 
-    public static class TravelStage extends BukkitRunnable {
+    static class TravelStage extends BukkitRunnable {
         private NukeControl control;
 
-        public TravelStage(NukeControl control) {
+        TravelStage(NukeControl control) {
             this.control = control;
         }
 
@@ -157,9 +142,9 @@ public class NukeControl {
             if (control.getNuke().getLocation().distance(control.getCheckPoint()) < 4) {
                 if (!control.getStage().equals(Stage.DECENT)) startNextTravelStage();
                 else {
-                    SquidNuke.squids.remove(control.getNuke().getUniqueId());
-                    NukeControl.nuke(control.plugin, control.getNuke().getLocation(), SquidNuke.blockDamage,
-                            SquidNuke.playerDamage);
+                    SquidNuke.SQUIDS.remove(control.getNuke().getUniqueId());
+                    NukeControl.nuke(control.plugin, control.getNuke().getLocation(), SquidNuke.BLOCK_DAMAGE,
+                            SquidNuke.PLAYER_DAMAGE);
                     control.getNuke().remove();
                     targets.remove(control.getTarget().getName());
                 }
@@ -170,13 +155,13 @@ public class NukeControl {
             }
         }
 
-        public void go() {
+        void go() {
             if (control.getNuke().getLocation().getBlockY() > 256) control.getNuke().teleport(control.getCheckPoint());
             Vector direction = control.getCheckPoint().toVector().subtract(control.getNuke().getLocation().toVector());
             control.getNuke().setVelocity(direction);
         }
 
-        public void startNextTravelStage() {
+        void startNextTravelStage() {
             control.calculateNextCheckpoint();
             Bukkit.getScheduler().scheduleSyncDelayedTask(control.plugin, new TravelStage(control), 1);
         }

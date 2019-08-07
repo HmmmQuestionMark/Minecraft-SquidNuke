@@ -4,30 +4,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.censoredsoftware</groupId>
+    <groupId>me.hqm</groupId>
     <artifactId>SquidNuke</artifactId>
-    <version>1.3.0</version>
+    <version>1.3.1</version>
 
     <name>SquidNuke</name>
     <description>SquidNuke for Bukkit/Spigot Minecraft Servers.</description>
 
-    <licenses>
-        <license>
-            <name>Artistic License 2.0</name>
-            <url>LICENSE.txt</url>
-            <distribution>repo</distribution>
-            <comments>License on all contributions</comments>
-        </license>
-    </licenses>
-
-    <ciManagement>
-        <system>Jenkins</system>
-        <url>http://builds.censoredsoftware.com/</url>
-    </ciManagement>
-
     <properties> <!-- It is important to keep up to date manually. -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spigot.version>1.12.2-R0.1-SNAPSHOT</spigot.version>
+        <spigot.version>1.14.2-R0.1-SNAPSHOT</spigot.version>
     </properties>
 
     <repositories>

@@ -1,4 +1,4 @@
-package com.censoredsoftware.squidnuke;
+package me.hqm.squidnuke;
 
 import org.bukkit.*;
 import org.bukkit.command.*;
@@ -73,7 +73,7 @@ class SquidNukeCommand implements CommandExecutor {
 
     private void launchNuke(final boolean alert, final Player owner, final EntityType type, final Location launch,
                             final OfflinePlayer target) {
-        warningSiren(false, launch, target.getPlayer().getLocation());
+        warningSiren(alert, launch, target.getPlayer().getLocation());
         for (int i = 6; i > 0; i--) {
             final int count = i - 1;
             Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
@@ -85,7 +85,7 @@ class SquidNukeCommand implements CommandExecutor {
                     NukeControl control = new NukeControl(plugin, squid, launch, target, NukeControl.
                             getTarget(target.getPlayer()));
                     control.startTravel();
-                    SquidNuke.squids.add(squid.getUniqueId());
+                    SquidNuke.SQUIDS.add(squid.getUniqueId());
                 } else if (alert) owner.sendMessage(ChatColor.GREEN + "" + count + "...");
             }, (6 - i) * 20);
         }
